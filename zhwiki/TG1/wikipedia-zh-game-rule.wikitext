@@ -1,0 +1,41 @@
+<!-- from https://github.com/pan93412/wikipedia-rules/blob/gh-pages/wikipedia-zh-game-rules.html -->
+= <code>#wikipedia-zh-game</code> 群規 =
+
+<div class='index'>
+<p>
+[/zhwiki/TG1/hans.html 簡體]
+[/zhwiki/TG1/hant.html 繁體]
+</p>
+</div>
+
+== [[#group-rule|群組主要規定]]<span id='group-rule'></span> ==
+
+* 請勿車輪戰！
+* 請勿玩權限！
+* 只有在有明確需要或對方明確同意下方能動用權限。
+* 若濫權當道，請聯繫 [tg]:(@Wong128hk)[/tg]。
+* 本群適用[IRCPOL|IRCPOL]:(WP:IRCPOL)[/IRCPOL]。
+
+== [[#game-rule|遊戲主要規定]]<span id='game-rule'></span> == 
+
+* 請使用 <code>#pin</code> 搜尋過往被其他人釘上去的事情！
+* 請在玩完狼人後[b]改回預設預言為中文正常模式[/b]（如果你是管理員的話）
+* 請不要在狼人殺遊戲進行[b]:(途中轉發、複製機器人[tg]:(werewolfbot)[/tg]的消息，或者在夜間死亡之後繼續發表有關遊戲的言論)[/b]（第一晚被殺的玩家允許在第二天白天留有遺言）。
+* 未參加狼人殺的群組人員[b]:(請不要發表有關有關遊戲的言論)[/b]。
+* [b]:(請勿在任何遊戲中開啟多重帳號)[/b]，違者將獲得至少一週的封禁。
+* 本群[b]:(禁止)[/b]膜蛤，如需膜蛤，請往 [tg]:(@wikipedia_zh_moha)[/tg]
+
+== [[#ban-rule|違反規定處置方法]]<span id='ban-rule'></span> == 
+
+# 先警告
+# 後 smite (管理員把人踢出遊戲)
+# 屢勸不聽則禁言一天
+
+== [[#bot-rule|機器人列表 & 注意事項]]<span id='bot-rule'></span> ==
+
+請參閱：[tg|wikipedia_zh_game/3]:(機器人列表及其注意事項)[/tg]
+
+== [[#each-game-rule|遊戲規則]]<span id='each-game-rule'></span> ==
+* 狼人殺規則：[tg|fullurl]@wikipedia_zh_game#6801[/tg]
+* 阿瓦隆規則：[tg|fullurl]@wikipedia_zh_game#7[/tg]
+* 地鐵站接龍規則（暫行）：[tg|fullurl]@wikipedia_zh_game#8[/tg]
