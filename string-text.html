@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>字元分析</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/github-dark.css">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+    <script src="/js/jquery-3.5.1.js"></script>
+    <script src="javascripts/main.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  </head>
+  <body>
+		<script type="text/javascript">
+			function dismiss(){
+				$('#result').hide();
+			}
+			$( document ).ready( function(){
+      
+				var forms = document.getElementsByTagName('form');
+				if( forms.length > 0 ){
+					$( "form" ).html5form( {
+						appendTo : '#moretools',
+						emptyMessage : '有必填項目留空。請填上後繼續。',
+						errorHeading : 'Error'
+					} );
+				}
+				$('#formerror').hide();
+
+				var statusbox = $('#statusbox');
+				if( statusbox != undefined ){
+					$('#dismiss').show();
+					$('#dismiss a').show();
+					if($.cookie('jarry-status') == statusbox.attr('name')){
+						statusbox.hide();
+					}
+				}
+			} );
+		</script>
+    <header>
+      <h1>字元分析</h1>
+    </header>
+    <div class="wrapper">
+      <section>
+        <p>可以把輸進來的字元轉成HTML，Unicode及UTF-8編碼。</p>
+        <p><label for="text">要轉換的文字：</label><input type="text" name="text" id="text" style="width:200px;"/><input type="submit" value="提交" /></p><p>
+        <div id="result">
+          <h3>結果</h3>
+          <p>HTML：<span id="string_html></span>"</p>
+          <p>Unicode：<span id="string_u+></span>"</p>
+          <p>Unicode：<span id="string_utf-8></span>"</p>
+        </div>
+      </section>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
