@@ -12,182 +12,192 @@ $(function () {
 //////////////////////////////////////////////////
 // Globals
 //
-    mw.loader.load('//zh.wikipedia.org/w/index.php?title=User:A2569875-sandbox/MyPopups/LogEventUtils.js&action=raw&ctype=text/javascript');
+	mw.loader.load('//sunny00217.ddns.net/popups/LogEventUtils.js');
+	mw.loader.load('//sunny00217.ddns.net/popups/popups.css', 'text/css');
 
 // Trying to shove as many of these as possible into the pg (popup globals) object
-//</noinclude><includeonly><source lang=javascript>
-var pg = {
-	re: {},               // regexps
-	ns: {},               // namespaces
-	string: {},           // translatable strings
-	user: {},             // current user info
-	wiki: {},             // local site info
-	misc: {},             // YUCK PHOOEY
-	option: {},           // options, see newOption etc
-	optionDefault: {},    // default option values
-	flag: {},             // misc flags
-	cache: {},            // page and image cache
-	structures: {},       // navlink structures
-	timer: {},            // all sorts of timers (too damn many)
-	counter: {},          // .. and all sorts of counters
-	current: {},          // state info
-	fn: {},               // functions
-	apiToken: {},
-	endoflist: null
-};
-/* Bail if the gadget/script is being loaded twice */
-if( window.pg ) {
-	return;
-}
-/* Export to global context */
-window.pg = pg;
+	if( window.pg || window.popups ) {
+		return;
+	}
+	
+	var pg = window.pg = window.popups = {
+		re: {},               // regexps
+		ns: {},               // namespaces
+		string: {},           // translatable strings
+		user: {},             // current user info
+		wiki: {},             // local site info
+		misc: {},             // YUCK PHOOEY
+		option: {},           // options, see newOption etc
+		optionDefault: {},    // default option values
+		flag: {},             // misc flags
+		cache: {},            // page and image cache
+		structures: {},       // navlink structures
+		timer: {},            // all sorts of timers (too damn many)
+		counter: {},          // .. and all sorts of counters
+		current: {},          // state info
+		fn: {},               // functions
+		apiToken: {},
+		endoflist: null
+	};
 
 /// Local Variables: ///
 /// mode:c ///
 /// End: ///
 // ENDFILE: main.js
 // STARTFILE: actions.js
-function setupTooltips(container, remove, force, popData) {
-	log('setupTooltips, container='+container+', remove='+remove);
-	if (!container) {
+	function setupTooltips(container, remove, force, popData) {
+		log('setupTooltips, container='+container+', remove='+remove);
+		if (!container) {
 //<NOLITE>
-		// the main initial call
-		if (getValueOf('popupOnEditSelection') && document && document.editform && document.editform.wpTextbox1) {
-			document.editform.wpTextbox1.onmouseup=doSelectionPopup;
-		}
-//</NOLITE>
-		// article/content is a structure-dependent thing
-		container = defaultPopupsContainer();
-	}
-
-	if (!remove && !force && container.ranSetupTooltipsAlready) { return; }
-	container.ranSetupTooltipsAlready = !remove;
-
-	var anchors;
-	anchors=container.getElementsByTagName('A');
-	setupTooltipsLoop(anchors, 0, 250, 100, remove, popData);
-}
-
-function defaultPopupsContainer() {
-	if (getValueOf('popupOnlyArticleLinks')) {
-		return document.getElementById('mw_content') || 
-			document.getElementById('content') ||
-			document.getElementById('article') || document;
-	}
-	return  document;
-}
-
-function setupTooltipsLoop(anchors,begin,howmany,sleep, remove, popData) {
-	log(simplePrintf('setupTooltipsLoop(%s,%s,%s,%s,%s)', arguments));
-	var finish=begin+howmany;
-	var loopend = Math.min(finish, anchors.length);
-	var j=loopend - begin;
-	log ('setupTooltips: anchors.length=' + anchors.length + ', begin=' + begin +
-		 ', howmany=' + howmany + ', loopend=' + loopend + ', remove=' + remove);
-	var doTooltip= remove ? removeTooltip : addTooltip;
-	// try a faster (?) loop construct
-	if (j > 0) {
-		do {
-			var a=anchors[loopend - j];
-			if (typeof a==='undefined' || !a || !a.href) {
-				log('got null anchor at index ' + loopend - j);
-				continue;
+			// the main initial call
+			if (getValueOf('popupOnEditSelection') && document && document.editform && document.editform.wpTextbox1) {
+				document.editform.wpTextbox1.onmouseup = doSelectionPopup;
 			}
-			doTooltip(a, popData);
-		} while (--j);
+//</NOLITE>
+			// article/content is a structure-dependent thing
+			container = defaultPopupsContainer();
+		}
+
+		if (!remove && !force && container.ranSetupTooltipsAlready) { return; }
+		container.ranSetupTooltipsAlready = !remove;
+
+		var anchors;
+		anchors = $('a', container);
+		setupTooltipsLoop(anchors, 0, 250, 100, remove, popData);
 	}
-	if (finish < anchors.length) {
-		setTimeout(function() {
+
+	function defaultPopupsContainer() {
+		if (getValueOf('popupOnlyArticleLinks')) {
+			return 
+				$('#mw_content') || 
+				$('#content') ||
+				$('#article') ||
+				document;
+		}
+		return  document;
+	}
+
+	function setupTooltipsLoop(anchors,begin,howmany,sleep, remove, popData) {
+		log(simplePrintf('setupTooltipsLoop(%s,%s,%s,%s,%s)', arguments));
+		var finish = begin + howmany;
+		var loopend = Math.min(finish, anchors.length);
+		var j = loopend - begin;
+		log ('setupTooltips: anchors.length=' + anchors.length + ', begin=' + begin +
+		 ', howmany=' + howmany + ', loopend=' + loopend + ', remove=' + remove);
+		var doTooltip= remove ? removeTooltip : addTooltip;
+		// try a faster (?) loop construct
+		if (j > 0) {
+			do {
+				var a=anchors[loopend - j];
+				if (typeof a==='undefined' || !a || !a.href) {
+					log('got null anchor at index ' + loopend - j);
+					continue;
+				}
+				doTooltip(a, popData);
+			} while (--j);
+		}
+		if (finish < anchors.length) {
+			setTimeout(function() {
 				setupTooltipsLoop(anchors,finish,howmany,sleep,remove,popData);},
 			sleep);
-	} else {
-		if ( !remove && ! getValueOf('popupTocLinks')) { rmTocTooltips(); }
-		pg.flag.finishedLoading=true;
+		} else {
+			if ( !remove && ! getValueOf('popupTocLinks')) {
+				rmTocTooltips();
+			}
+			pg.flag.finishedLoading = true;
+		}
 	}
-}
 
 // eliminate popups from the TOC
 // This also kills any onclick stuff that used to be going on in the toc
-function rmTocTooltips() {
-	var toc=document.getElementById('toc');
-	if (toc) {
-		var tocLinks=toc.getElementsByTagName('A');
-		var tocLen = tocLinks.length;
-		for (var j=0; j<tocLen; ++j) {
+	function rmTocTooltips() {
+	var toc = $('#toc')[0];
+		if (toc) {
+			var tocLinks = toc.getElementsByTagName('A');
+			var tocLen = tocLinks.length;
+			for (var j = 0; j < tocLen; ++j) {
 			removeTooltip(tocLinks[j], true);
+			}
 		}
 	}
-}
 
-function addTooltip(a, popData) {
-	if ( !isPopupLink(a) ) { return; }
-	a.onmouseover=mouseOverWikiLink;
-	a.onmouseout= mouseOutWikiLink;
-	a.onmousedown = killPopup;
-	a.hasPopup = true;
-	a.popData = popData;
-}
-
-function removeTooltip(a) {
-	if ( !a.hasPopup ) { return; }
-	a.onmouseover = null;
-	a.onmouseout = null;
-	if (a.originalTitle) { a.title = a.originalTitle; }
-	a.hasPopup=false;
-}
-
-function removeTitle(a) {
-	if (!a.originalTitle) {
-		a.originalTitle=a.title;
+	function addTooltip(a, popData) {
+		if ( !isPopupLink(a) ) {
+			return;
+		}
+		a.onmouseover = mouseOverWikiLink;
+		a.onmouseout = mouseOutWikiLink;
+		a.onmousedown = killPopup;
+		a.hasPopup = true;
+		a.popData = popData;
 	}
+
+	function removeTooltip(a) {
+		if ( !a.hasPopup ) {
+			return;
+		}
+		a.onmouseover = null;
+		a.onmouseout = null;
+		if (a.originalTitle) {
+			a.title = a.originalTitle;
+		}
+		a.hasPopup = false;
+	}
+
+	function removeTitle(a) {
+		if (!a.originalTitle) {
+			a.originalTitle=a.title;
+		}
 		a.title='';
-}
-
-function restoreTitle(a) {
-	if ( a.title || !a.originalTitle ) { return; }
-	a.title = a.originalTitle;
-}
-
-function registerHooks(np) {
-	var popupMaxWidth=getValueOf('popupMaxWidth');
-
-	if (typeof popupMaxWidth === 'number') {
-		var setMaxWidth = function () {
-			np.mainDiv.style.maxWidth = popupMaxWidth + 'px';
-			np.maxWidth = popupMaxWidth;
-		};
-		np.addHook(setMaxWidth, 'unhide', 'before');
 	}
+
+	function restoreTitle(a) {
+		if ( a.title || !a.originalTitle ) {
+			return;
+		}
+		a.title = a.originalTitle;
+	}
+
+	function registerHooks(np) {
+		var popupMaxWidth = getValueOf('popupMaxWidth');
+
+		if (typeof popupMaxWidth === 'number') {
+			var setMaxWidth = function () {
+				np.mainDiv.style.maxWidth = popupMaxWidth + 'px';
+				np.maxWidth = popupMaxWidth;
+			};
+			np.addHook(setMaxWidth, 'unhide', 'before');
+		}
 //<NOLITE>
-	np.addHook(addPopupShortcuts, 'unhide', 'after');
-	np.addHook(rmPopupShortcuts, 'hide', 'before');
+		np.addHook(addPopupShortcuts, 'unhide', 'after');
+		np.addHook(rmPopupShortcuts, 'hide', 'before');
 //</NOLITE>
-}
+	}
 
-function removeModifierKeyHandler(a) {
-	//remove listeners for modifier key if any that were added in mouseOverWikiLink
-	document.removeEventListener('keydown', a.modifierKeyHandler, false);
-	document.removeEventListener('keyup', a.modifierKeyHandler, false);
-}
+	function removeModifierKeyHandler(a) {
+		//remove listeners for modifier key if any that were added in mouseOverWikiLink
+		document.removeEventListener('keydown', a.modifierKeyHandler, false);
+		document.removeEventListener('keyup', a.modifierKeyHandler, false);
+	}
 
-function mouseOverWikiLink(evt) {
-	if (!evt && window.event) {evt=window.event;}
+	function mouseOverWikiLink(evt) {
+		if (!evt && window.event) {evt=window.event;}
 	
 	// if the modifier is needed, listen for it, 
 	// we will remove the listener when we mouseout of this link or kill popup.
-	if (getValueOf('popupModifier')) {
+		if (getValueOf('popupModifier')) {
 		// if popupModifierAction = enable, we should popup when the modifier is pressed
 		// if popupModifierAction = disable, we should popup unless the modifier is pressed 
-    	var action = getValueOf('popupModifierAction');
-    	var key = action=='disable' ? 'keyup' : 'keydown';
-    	var a = this;
-    	a.modifierKeyHandler = function(evt) {
+    		var action = getValueOf('popupModifierAction');
+    		var key = action == 'disable' ? 'keyup' : 'keydown';
+    		var a = this;
+    		a.modifierKeyHandler = function(evt) {
 			mouseOverWikiLink2(a, evt);
 		};
-    	document.addEventListener(key, a.modifierKeyHandler, false);
+    		document.addEventListener(key, a.modifierKeyHandler, false);
+		}
+		return mouseOverWikiLink2(this, evt);
 	}
-	return mouseOverWikiLink2(this, evt);
-}
 
 /**
  * Gets the references list item that the provided footnote link targets. This
@@ -195,67 +205,80 @@ function mouseOverWikiLink(evt) {
  * @param {Element} a - A footnote link.
  * @returns {Element|boolean} The targeted element, or false if one can't be found. 
  */
-function footnoteTarget(a) {
-	var aTitle=Title.fromAnchor(a);
+	function footnoteTarget(a) {
+		var aTitle = Title.fromAnchor(a);
 	// We want ".3A" rather than "%3A" or "?" here, so use the anchor property directly
-	var anch = aTitle.anchor;
-	if ( ! /^(cite_note-|_note-|endnote)/.test(anch) ) { return false; }
+		var anch = aTitle.anchor;
+		if ( ! /^(cite_note-|_note-|endnote)/.test(anch) ) {
+			return false;
+		}
 
-	var lTitle=Title.fromURL(location.href);
-	if ( lTitle.toString(true) !== aTitle.toString(true) ) { return false; }
+		var lTitle = Title.fromURL(location.href);
+		if ( lTitle.toString(true) !== aTitle.toString(true) ) {
+			return false;
+		}
 
-	var el=document.getElementById(anch);
-	while ( el && typeof el.nodeName === 'string') {
-		var nt = el.nodeName.toLowerCase();
-		if ( nt === 'li' ) { return el; }
-		else if ( nt === 'body' ) { return false; }
-		else if ( el.parentNode ) { el=el.parentNode; }
-		else { return false; }
+		var el = $(`#${anch}`)[0];
+		while ( el && typeof el.nodeName === 'string') {
+			var nt = el.nodeName.toLowerCase();
+			if ( nt === 'li' ) {
+				return el;
+			}
+			else if ( nt === 'body' ) {
+				return false;
+			}
+			else if ( el.parentNode ) {
+				el=el.parentNode;
+			}
+			else { return false; }
+		}
+		return false;
 	}
-	return false;
-}
 
-function footnotePreview(x, navpop) {
-	setPopupHTML('<hr />' + x.innerHTML, 'popupPreview', navpop.idNumber);
+	function footnotePreview(x, navpop) {
+		setPopupHTML('<hr />' + x.innerHTML, 'popupPreview', navpop.idNumber);
 //</source></includeonly><noinclude>
-}
+	}
 
-function modifierPressed(evt) {
-		var mod=getValueOf('popupModifier');
-		if (!mod) { return false; }
+	function modifierPressed(evt) {
+		var mod = getValueOf('popupModifier');
+		if (!mod) {
+			return false;
+		}
 
-		if (!evt && window.event) {evt=window.event;}
+		if (!evt && window.event) {
+			evt = window.event;
+		}
 
 		return ( evt && mod && evt[mod.toLowerCase() + 'Key'] );
 
-}
+	}
 
-function dealWithModifier(a,evt) {
-	if (!getValueOf('popupModifier')) { return false; }
-	var action = getValueOf('popupModifierAction');
-	if ( action ==  'enable' && !modifierPressed(evt) ||
-	     action == 'disable' &&  modifierPressed(evt) ) {
+	function dealWithModifier(a,evt) {
+		if (!getValueOf('popupModifier')) { return false; }
+		var action = getValueOf('popupModifierAction');
+		if ( action ==  'enable' && !modifierPressed(evt) ||
+			action == 'disable' &&  modifierPressed(evt) ) {
 		// if the modifier is needed and not pressed, listen for it until
 		// we mouseout of this link.
-		restoreTitle(a);
-		a.modifierKeyHandler=modifierKeyHandler(a);
+			restoreTitle(a);
+			a.modifierKeyHandler=modifierKeyHandler(a);
 
-		switch (action) {
-		case 'enable':
-			document.addEventListener('keydown', a.modifierKeyHandler, false);
-			a.addEventListener('mouseout', function() {
-					document.removeEventListener('keydown',
-								a.modifierKeyHandler, false);
+			switch (action) {
+			case 'enable':
+				document.addEventListener('keydown', a.modifierKeyHandler, false);
+				a.addEventListener('mouseout', function() {
+						document.removeEventListener('keydown', a.modifierKeyHandler, false);
 				}, true);
-			break;
-		case 'disable':
-			document.addEventListener('keyup', a.modifierKeyHandler, false);
-		}
+				break;
+			case 'disable':
+				document.addEventListener('keyup', a.modifierKeyHandler, false);
+			}
 
-		return true;
+			return true;
+		}
+		return false;
 	}
-	return false;
-}
 
 function mouseOverWikiLink2(a, evt) {
 	var get_site = RegExp("//([^/]+)").exec(a);
