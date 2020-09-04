@@ -241,18 +241,6 @@ $(function () {
 					break;
 				//=================================================
 			//M：managetags, massmessage, merge, move, 
-				case 'malfeasance':		//濫權日誌 {{幽默}}
-					switch (logaction){
-						case 'antigng':	//假的，我的眼睛業障重
-							break;
-						case '燃燈':	//兔晶日誌 (?
-							break;
-						case '藍桌':	//藍桌法將被推翻。
-							break;
-						default:
-							break;
-					}
-					break;
 				case 'managetags'://
 					switch (logaction){
 						case '':
@@ -281,12 +269,12 @@ $(function () {
 					var suppressredirect = (params.suppressredirect === '') ? "不留重新導向地" : '';
 					var orginal_text = "將[[" + title + "]]" + suppressredirect + "移動到[[" + params.target_title + "]]";
 					var change_ns = (((typeof data.ns !== 'undefined' && data.ns !== null) ? parseInt(data.ns) : parseInt(params.target_ns)) 
-							!= parseInt(params.target_ns)) ? " (跨名字空間移動)" : '';
+							!= parseInt(params.target_ns)) ? "（跨名字空間移動）" : '';
 					switch (logaction){
 						case 'move':
 							return orginal_text + change_ns;
 						case 'move_redir':
-							return orginal_text + "並覆蓋原有重定向頁。" + change_ns;
+							return orginal_text + "並覆蓋原有重新導向頁。" + change_ns;
 						default:
 							break;
 					}
@@ -505,39 +493,40 @@ $(function () {
 		}
 		return null;
 	};
-	window.a2569875PopUp = {};
-	window.a2569875PopUp.Module = {};
-	window.a2569875PopUp.Module.LogEventTypes = [
-		/* A */ 'abusefilter', 'avatar',
-		/* B */ 'block',
-		/* C */ 'campus', 'comments', 'contentmodel', 'course', 
-		/* D */ 'delete', 
-		/* E */
-		/* F */
-		/* G */ 'gblblock', 'gblrename', 'gblrights', 'globalauth', 'gwtoolset', 
-		/* H */
-		/* I */ 'import', 'institution', 'instructor', 
-		/* J */
-		/* K */
-		/* L */ 'liquidthreads', 
-		/* M */ 'malfeasance', 'managetags', 'massmessage', 'merge', 'move', 
-		/* N */ 'newusers', 'notifytranslators', 
-		/* O */ 'online', 
-		/* P */ 'pagelang', 'pagetranslation', 'pagetriage-curation', 'pagetriage-deletion', 'patrol', 'protect', 
-		/* Q */ 
-		/* R */ 'renameuser', 'rights', 
-		/* S */ 'spamblacklist', 'student', 'stable', 'suppress', 
-		/* T */ 'tag', 'thanks', 'timedmediahandler', 'titleblacklist', 'translationreview', 
-		/* U */ 'newsletter', 'upload', 'usermerge', 
-		/* V */
-		/* W */
-		/* X */
-		/* Y */
-		/* Z */
-		/* E */
-	];
-	window.a2569875PopUp.Module.generationLogEventString = generationLogEventString;
-	window.a2569875PopUp.Module.myStringFormat = pstringformat;
+	window.popups = window.popups || {};
+	var module = window.popups.Module = {
+		LogEventTypes: [
+			/* A */ 'abusefilter', 'avatar',
+			/* B */ 'block',
+			/* C */ 'campus', 'comments', 'contentmodel', 'course', 
+			/* D */ 'delete', 
+			/* E */
+			/* F */
+			/* G */ 'gblblock', 'gblrename', 'gblrights', 'globalauth', 'gwtoolset', 
+			/* H */
+			/* I */ 'import', 'institution', 'instructor', 
+			/* J */
+			/* K */
+			/* L */ 'liquidthreads', 
+			/* M */ 'managetags', 'massmessage', 'merge', 'move', 
+			/* N */ 'newusers', 'notifytranslators', 
+			/* O */ 'online', 
+			/* P */ 'pagelang', 'pagetranslation', 'pagetriage-curation', 'pagetriage-deletion', 'patrol', 'protect', 
+			/* Q */ 
+			/* R */ 'renameuser', 'rights', 
+			/* S */ 'spamblacklist', 'student', 'stable', 'suppress', 
+			/* T */ 'tag', 'thanks', 'timedmediahandler', 'titleblacklist', 'translationreview', 
+			/* U */ 'newsletter', 'upload', 'usermerge', 
+			/* V */
+			/* W */
+			/* X */
+			/* Y */
+			/* Z */
+			/* E */
+		],
+		generationLogEventString: generationLogEventString,
+		myStringFormat: pstringformat
+	}
 });
 
 /*
@@ -563,5 +552,4 @@ pagelang/pagelang, pagetranslation/mark, pagetranslation/unmark, pagetranslation
 pagetranslation/deletelok, pagetranslation/deletefok, pagetranslation/deletelnok, pagetranslation/deletefnok, 
 pagetranslation/encourage, pagetranslation/discourage, pagetranslation/prioritylanguages, pagetranslation/associate, 
 pagetranslation/dissociate
-
 */
