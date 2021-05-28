@@ -1,18 +1,20 @@
-window.history.pushState = ( function ( type ) {
-	var orig = history[ type ];
-	return function () {
-		var rv = orig.apply( this, arguments );
-		var e = new Event( type );
-		e.arguments = arguments;
-		window.dispatchEvent( e );
-		return rv;
-	};
-}( "pushState" ) );
+$( function () {
+	window.history.pushState = ( function ( type ) {
+		var orig = history[ type ];
+		return function () {
+			var rv = orig.apply( this, arguments );
+			var e = new Event( type );
+			e.arguments = arguments;
+			window.dispatchEvent( e );
+			return rv;
+		};
+	}( "pushState" ) );
 
-window.addEventListener( "pushState", function () {
-	history.replaceState( "", "", window.location.pathname.replace( /^\/sickmanempire\//, "/" ) + window.location.hash );
+	window.addEventListener( "pushState", function () {
+		history.replaceState( "", "", window.location.pathname.replace( /^\/sickmanempire\//, "/" ) + window.location.hash );
+	} );
+
+	$( "a" ).filter( function () {
+		return $( this ).html().match( "Powered by <b>GitBook</b>" );
+	} );
 } );
-
-$( "a" ).filter( function () {
-	return $( this ).text().match( "Powered by GitBook" );
-} ).remove();
