@@ -12,3 +12,7 @@ window.history.pushState = ( function ( type ) {
 window.addEventListener( "pushState", function () {
 	history.replaceState( "", "", window.location.pathname.replace( /^\/sickmanempire\//, "/" ) + window.location.hash );
 } );
+
+$( "a" ).filter( function () {
+	return $( this ).text().match( "Powered by GitBook" );
+} ).remove();
