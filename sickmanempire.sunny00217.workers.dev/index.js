@@ -16,5 +16,5 @@ $( function () {
 
 	$( "a" ).filter( function () {
 		return $( this ).html().match( "Powered by <b>GitBook</b>" );
-	} );
+	} ).remove();
 } );
